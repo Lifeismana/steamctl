@@ -17,7 +17,7 @@ LOG = logging.getLogger(__name__)
 
 APP = 730
 DEPOT = 731
-MANIFEST = [9115840458958238518, 4416248450556854960]
+MANIFEST = {731:[9115840458958238518, 4416248450556854960], 732:[3227301410759530897]}
 
 MANIFESTS = {"2347770": [ 4473487723012660428, 992161785091620447, 7408154579934899661, 5524296447051579998, 7780284852338481782, 1817955853493084055, 6753534390520317003, 5946644637254121542, 2127588128906927923, 4543955829510800454, 1035466373246425013, 2151952796073781340, 5357854883766668831, 2182233850230741503, 281936315406757955, 420087000680427403, 8272899024788234712, 3864476401627506266, 9012759399567640305, 7490738140762486640, 3744870746062564069]
 , "2347771": [3805708056119697931, 8254570254769889147, 4408975132623504081, 148084638517423330, 241575148638211373, 5450149741582443877, 4646106614081054076, 441916249227414378, 7319276772564135830, 3754018638600474871, 3726477318459807170, 694099313588605089, 4646777846649292218, 8227697818958662323, 18041795805829013, 8952376812951361193, 7526142366326028958, 2519456234678493914, 5271715121203446825, 932998659899485441, 2687474053035626042],
@@ -50,15 +50,16 @@ def init_clients(args):
 
     # load the manifest
     try:
-        for mani in MANIFEST:
-            cached_manifest = cdn.get_cached_manifest(APP, DEPOT, mani)
-            if not cached_manifest:
-                manifest_code = cdn.get_manifest_request_code(
-                    APP, DEPOT, mani
-                )
-            else:
-                manifest_code = None
-            manifests.append(cdn.get_manifest(APP, DEPOT, mani, decrypt=decrypt, manifest_request_code=manifest_code))
+        for depot in MANIFEST:
+            for mani in MANIFEST[depot]:
+                cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
+                if not cached_manifest:
+                    manifest_code = cdn.get_manifest_request_code(
+                        APP, depot, mani
+                    )
+                else:
+                    manifest_code = None
+                manifests.append(cdn.get_manifest(APP, depot, mani, decrypt=decrypt, manifest_request_code=manifest_code))
     except SteamError as exp:
         if exp.eresult == EResult.AccessDenied:
             raise SteamError("This account doesn't have access to the app depot", exp.eresult)
