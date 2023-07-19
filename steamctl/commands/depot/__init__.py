@@ -139,5 +139,5 @@ def cmd_parser(cp):
     scp_l.set_defaults(_cmd_func=__name__ + '.gcmds:cmd_depot_decrypt_gid')
 
     # ---- manifestdl
-    scp_l = sub_cp.add_parser("manifestdl", help="Download manifest files")
-    scp_l.set_defaults(_cmd_func=__name__ + '.manifestdl:cmd_depot_manifestdl')
+    scp_mdl = sub_cp.add_parser("manifestdl", help="Download manifest files")
+    scp_mdl.set_defaults(_cmd_func=__name__ + '.manifestdl:cmd_depot_manifestdl')
