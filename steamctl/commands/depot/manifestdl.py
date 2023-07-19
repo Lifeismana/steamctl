@@ -7,7 +7,7 @@ gevent.monkey.patch_ssl()
 
 import logging
 
-
+from contextlib import contextmanager
 from steam.exceptions import SteamError
 from steam.enums import EResult
 from steamctl.clients import CachingSteamClient
@@ -18,8 +18,8 @@ APP = 730
 DEPOT = 731
 MANIFEST = 9115840458958238518
 
-
-def cmd_depot_manifestdl(args):
+@contextmanager
+def init_clients(args):
     s = CachingSteamClient()
 
     if args.cell_id is not None:
@@ -72,3 +72,12 @@ def cmd_depot_manifestdl(args):
     # clean and exit
     cdn.save_cache()
     s.disconnect()
+
+def cmd_depot_manifestdl(args):
+    try:
+        with init_clients(args) as (_, cdn, manifests):
+            print("I don't know what i'm doing")
+
+    except SteamError as exp:
+        LOG.error(str(exp))
+        return 1  # error
