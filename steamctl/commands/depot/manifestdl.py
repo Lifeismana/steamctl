@@ -66,8 +66,11 @@ def init_clients(args):
 
     # load the manifest
     try:
+        args.app = APP
         for depot in MANIFESTS:
+            args.depot = DEPOT
             for mani in MANIFESTS[depot]:
+                args.manifest = mani
                 cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
                 if not cached_manifest:
                     manifest_code = cdn.get_manifest_request_code(APP, depot, mani)
@@ -78,7 +81,7 @@ def init_clients(args):
                 
     except SteamError as exp:
         if exp.eresult == EResult.AccessDenied:
-            LOG.warn(f"This account doesn't have access to the app depot {depot}", exp.eresult)
+            LOG.warn(f"This account doesn't have access to the app depot {depot} {exp.eresult}")
         elif 'HTTP Error 404' in str(exp):
             LOG.warn(f"Manifest {mani} not found on CDN")
         else:
