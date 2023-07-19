@@ -56,12 +56,12 @@ def init_clients(args):
             for mani in MANIFESTS[depot]:
                 cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
                 if not cached_manifest:
-                    manifest_code = cdn.get_manifest_request_code(
-                        APP, depot, mani
-                    )
+                    manifest_code = cdn.get_manifest_request_code(APP, depot, mani)
+                    manifests.append(cdn.get_manifest(APP, depot, mani, decrypt=decrypt, manifest_request_code=manifest_code))
                 else:
                     manifest_code = None
-                manifests.append(cdn.get_manifest(APP, depot, mani, decrypt=decrypt, manifest_request_code=manifest_code))
+                    manifests.append(cached_manifest)
+                
     except SteamError as exp:
         if exp.eresult == EResult.AccessDenied:
             raise SteamError("This account doesn't have access to the app depot", exp.eresult)
