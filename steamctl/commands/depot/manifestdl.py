@@ -11,6 +11,7 @@ from contextlib import contextmanager
 from steam.exceptions import SteamError
 from steam.enums import EResult
 from steamctl.clients import CachingSteamClient
+from steamctl.utils.format import fmt_datetime
 
 LOG = logging.getLogger(__name__)
 
@@ -77,6 +78,26 @@ def cmd_depot_manifestdl(args):
     try:
         with init_clients(args) as (_, cdn, manifests):
             print("I don't know what i'm doing")
+            for i, manifest in enumerate(manifests, 1):
+                print("Manifest GID:", manifest.metadata.gid_manifest)
+                print("Created On:", fmt_datetime(manifest.metadata.creation_time))
+
+
+                if cdn:
+                    depot_info = cdn.app_depots.get(manifest.app_id, {}).get(str(manifest.metadata.depot_id))
+
+                    if depot_info:
+                        print("Config:", depot_info.get('config', '{}'))
+                        if 'dlcappid' in depot_info:
+                            print("DLC AppID:", depot_info['dlcappid'])
+
+                        print("Branch:", args.branch)
+                        print("Open branches:", ', '.join(depot_info.get('manifests', {}).keys()))
+                        print("Protected branches:", ', '.join(depot_info.get('encryptedmanifests', {}).keys()))
+
+                if i != len(manifests):
+                    print("-"*40)
+
 
     except SteamError as exp:
         LOG.error(str(exp))
