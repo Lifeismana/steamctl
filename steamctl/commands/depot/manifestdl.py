@@ -17,7 +17,7 @@ from steamctl.utils.format import fmt_datetime
 LOG = logging.getLogger(__name__)
 
 APP = 730
-DEPOT = 731
+DEPOT_TEST = 731
 MANIFEST = {731:[9115840458958238518, 4416248450556854960], 732:[3227301410759530897]}
 
 MANIFESTS = {2347779: [187047130493366144, 4022071540859827277, 1690370660893930362, 1725127524740368673, 7321994633680785468, 5179751417437217568, 2286149188409598450, 6648241233197971950, 9088407507291724591, 1774080703881064639, 186663600593146917, 7027319872198561758, 7996723125568704577, 209895134542222148, 3836757039368092987, 1923413707392182986, 6684364688997334667, 2600984163371577443, 7985311292641617795, 6866326769762295434, 577283016894644358, 5736705030505559513]
@@ -68,7 +68,7 @@ def init_clients(args):
     try:
         args.app = APP
         for depot in MANIFESTS:
-            args.depot = DEPOT
+            args.depot = depot
             for mani in MANIFESTS[depot]:
                 args.manifest = mani
                 cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
@@ -76,7 +76,6 @@ def init_clients(args):
                     manifest_code = cdn.get_manifest_request_code(APP, depot, mani)
                     manifests.append(cdn.get_manifest(APP, depot, mani, decrypt=decrypt, manifest_request_code=manifest_code))
                 else:
-                    manifest_code = None
                     manifests.append(cached_manifest)
                 
     except SteamError as exp:
