@@ -10,6 +10,7 @@ import logging
 from contextlib import contextmanager
 from steam.exceptions import SteamError
 from steam.enums import EResult
+from steam.client import EMsg
 from steamctl.clients import CachingSteamClient
 from steamctl.utils.format import fmt_datetime
 
@@ -48,6 +49,20 @@ def init_clients(args):
 
     mani = 0
     depot = 0
+
+    LOG.info("Checking licenses")
+
+    if s.logged_on and not s.licenses and s.steam_id.type != s.steam_id.EType.AnonUser:
+        s.wait_event(EMsg.ClientLicenseList, raises=False, timeout=10)
+
+    cdn.load_licenses()
+
+    if APP not in cdn.licensed_app_ids:
+        raise SteamError("No license available for App ID: %s" % APP, EResult.AccessDenied)
+
+
+    LOG.info("Checking change list")
+    s.check_for_changes()
 
     # load the manifest
     try:
