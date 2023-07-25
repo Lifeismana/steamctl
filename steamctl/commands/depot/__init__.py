@@ -142,3 +142,6 @@ def cmd_parser(cp):
     scp_mdl = sub_cp.add_parser("manifestdl", help="Download manifest files")
     scp_mdl.add_argument('--cell_id', type=int, help='Cell ID to use for download')
     scp_mdl.set_defaults(_cmd_func=__name__ + '.manifestdl:cmd_depot_manifestdl')
+    scp_mdl.add_argument('2347770', type=str, help='manifest for 2347770')
+    scp_mdl.add_argument('2347771', type=str, help='manifest for 2347771')
+    scp_mdl.add_argument('2347779', type=str, help='manifest for 2347779')

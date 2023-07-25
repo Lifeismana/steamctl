@@ -66,16 +66,18 @@ def init_clients(args):
     # load the manifest
     try:
         args.app = APP
-        for depot in MANIFESTS:
-            args.depot = depot
-            for mani in MANIFESTS[depot]:
-                args.manifest = mani
-                cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
-                if not cached_manifest:
-                    manifest_code = cdn.get_manifest_request_code(APP, depot, mani)
-                    manifests.append(cdn.get_manifest(APP, depot, mani, decrypt=decrypt, manifest_request_code=manifest_code))
-                else:
-                    manifests.append(cached_manifest)
+        for depot in [2347770, 2347771, 2347779]:
+            if args.get(depot):
+                args.depot = depot
+                for mani in args.get(depot).slipt():
+                    args.manifest = mani
+                    LOG.info(f"Getting manifest {args.manifest} for depot {args.depot} for app {args.app}")
+                    cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
+                    if not cached_manifest:
+                        manifest_code = cdn.get_manifest_request_code(APP, depot, mani)
+                        manifests.append(cdn.get_manifest(APP, depot, mani, decrypt=decrypt, manifest_request_code=manifest_code))
+                    else:
+                        manifests.append(cached_manifest)
                 
     except SteamError as exp:
         if exp.eresult == EResult.AccessDenied:
