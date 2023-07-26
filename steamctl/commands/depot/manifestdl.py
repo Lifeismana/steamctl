@@ -67,9 +67,10 @@ def init_clients(args):
     try:
         args.app = APP
         for depot in [2347770, 2347771, 2347779]:
-            if args.get(depot):
+            dict_args = vars(args)
+            if dict_args.get(depot):
                 args.depot = depot
-                for mani in args.get(depot).slipt():
+                for mani in dict_args.get(depot).slipt():
                     args.manifest = mani
                     LOG.info(f"Getting manifest {args.manifest} for depot {args.depot} for app {args.app}")
                     cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
