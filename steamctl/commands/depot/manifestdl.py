@@ -17,10 +17,6 @@ from steamctl.utils.format import fmt_datetime
 LOG = logging.getLogger(__name__)
 
 APP = 730
-DEPOT_TEST = 731
-MANIFEST = {731:[9115840458958238518, 4416248450556854960], 732:[3227301410759530897]}
-
-MANIFESTS = {2347770:[1077985928720806923 ], 2347771:[8327826369021188923], 2347779: [6930564943378593358]}
 
 @contextmanager
 def init_clients(args):
