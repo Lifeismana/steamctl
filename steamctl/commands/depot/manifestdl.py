@@ -71,12 +71,12 @@ def init_clients(args):
             if dict_args.get(depot):
                 args.depot = int(depot)
                 for mani in dict_args.get(depot).split():
-                    args.manifest = mani
+                    args.manifest = int(mani)
                     LOG.info(f"Getting manifest {args.manifest} for depot {args.depot} for app {args.app}")
-                    cached_manifest = cdn.get_cached_manifest(APP, depot, mani)
+                    cached_manifest = cdn.get_cached_manifest(APP, args.depot, args.manifest)
                     if not cached_manifest:
-                        manifest_code = cdn.get_manifest_request_code(APP, depot, mani)
-                        manifests.append(cdn.get_manifest(APP, depot, mani, decrypt=decrypt, manifest_request_code=manifest_code))
+                        manifest_code = cdn.get_manifest_request_code(APP, args.depot, args.manifest)
+                        manifests.append(cdn.get_manifest(APP, args.depot, args.manifest, decrypt=decrypt, manifest_request_code=manifest_code))
                     else:
                         manifests.append(cached_manifest)
                 
